@@ -7,8 +7,8 @@ It reads and writes Airtable bases straight from a Grasshopper canvas: discover 
 - **Auth:** Airtable personal access token required, see [Authentication](authentication.md)
 - **Version:** 1.0.0
 - **Rhino support:** Rhino 7 (.NET Framework 4.8), Rhino 8 Windows (.NET 7), Mac not yet supported
-- **License:** _(added once licensed)_
-- **GitHub:** _(added once the repo is published)_
+- **License:** MIT
+- **GitHub:** [eesha-on-jupiter/AirTableConnect](https://github.com/eesha-on-jupiter/AirTableConnect)
 - **Food4Rhino:** _(added once listed on food4rhino.com)_
 - **Released:** _(added on first public release)_
 
