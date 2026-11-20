@@ -1,0 +1,67 @@
+{
+  "plugin_name": "AirTableConnect",
+  "platform": "Airtable",
+  "docs_url": "https://airtable.com/developers/web/api/introduction",
+  "token_env_var": "AIRTABLECONNECT_TOKEN",
+  "findings_path": "dogfood/AirTableConnect-run-01.md",
+  "started": "2026-08-30T00:00:00",
+  "last_active": "2026-09-03T21:07:13",
+  "please_rest_version": "2.6.0",
+  "current_phase": 11,
+  "current_phase_name": "Icons",
+  "completed_phases": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "gates_passed": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "gates_pending": [
+    6,
+    7
+  ],
+  "last_completed_step": "Phase 11 Icons complete. icons.json authored at the plugin root: 3-colour Airtable palette (red #F82B60 = access/discovery, blue #2D7FF9 = schema, yellow #FCB400 = data), with shape encoding operation kind (hexagon=auth, rounded-square=live API call, cut-square=local JSON builder, octagon=preset), a per-subcategory background watermark encoding the resource, and the foreground glyph encoding the action. Yellow subcategories use a dark #181D1F glyph for contrast; JSON-builder subcategories use the light tint of their family colour. All 19 component icons (24x24) + the ribbon logo (16x16, red->yellow gradient) rendered via pr-icon-generator and wired into Properties/Resources.resx. Hit dogfood F5 (add_to_resources duplicated every Designer.cs property against the Phase 8/10 placeholders -> 60 CS0102 errors); fixed by deleting the older placeholder block. Rebuild: 0 errors, 24 warnings (all the expected CA1416 net7.0-Mac set, F4). Then, at the user's request, the canvas subcategories were merged 11 -> 7: each JSON-builder component now shares a subcategory with the live call it feeds (Table JSON->Table, Field JSON->Field, Record JSON->Record, Attachment JSON->Attachment). Touched PluginUtilities.cs (7 constants, renumbered 1-7, dropped the unused CategoryZZUtilities), 12 component files' SubCategory references, the Components/ folder tree (7 folders), icons.json (the 4 'X JSON' subcategory blocks became per-component background overrides on the 7 builder components), plugin-spec.json, todo.md and CLAUDE.md. Verified visual-neutral: all 20 rendered PNGs are byte-for-byte identical before and after. Rebuild: 0 errors, 24 expected CA1416 warnings. Icons then revised twice more at the user's direction. (a) Diagnosed a 'random border' the user spotted: background.icon defaults to filling the whole canvas, so the near-solid watermark silhouettes bleached every tile while the rounded corners kept the true gradient, reading as a dark rim. Proved it with an isolated two-icon probe config (watermark on/off). (b) Dropped the watermark layer entirely and cut the palette to red + blue only: red #F82B60->#B0113F now means 'writes to Airtable' (CreateTable, CreateField, UpdateField, CreateRecords, UpdateRecords, UploadAttachment), blue #2D7FF9->#1B4FA8 is everything else; shape still carries live-call vs local-builder. Yellow and the dark #181D1F foreground are gone, all glyphs are white. All 20 icons re-rendered and re-embedded into Resources.resx (verified: no F5 duplication this pass, and the decoded resx bitmaps match the new PNGs pixel-for-pixel). Rebuild: 0 errors, 24 expected CA1416 warnings. Preset shape changed octagon -> bubble at the user's request; both preset icons re-rendered, re-embedded, rebuild still 0 errors. Final glyph pass: GetBaseSchema mdi:file-tree -> mdi:sitemap-outline (the file-tree glyph read as an indistinct block cluster at 24px). A Presets glyph.fit override was tried and reverted \u2014 the bubble shape's authored glyph box is tighter than 0.62 of the canvas so the override made the presets larger, and 0.50 made them mushy; the shape-authored box renders best, so no glyph override is set. All three icons re-embedded; rebuild 0 errors.",
+  "next_step": "Proceed to Phase 12 \u2014 Tests (pr-unit-tests: BuilderTests.cs + BulkAssemblyTests.cs, then pr-rhino-test: build the 8 demo .gh files and live-test every component in Rhino via the Grasshopper MCP bridge, ahead of Gate 6)",
+  "decisions": {
+    "aec_features_selected": [
+      "Auth Manager",
+      "Batch Processor"
+    ],
+    "skipped_endpoints": [],
+    "partial_calls": [
+      "RESOLVED: get_base_schema, create_table, create_field, update_field, list_records, create_records, update_records, upload_attachment were initially FLAGGED (PAT had zero accessible bases). User granted the PAT access to a new base ('Test Base', appNNi5g3qy6CBtLA) and all 8 were re-tested live via chained test_endpoint calls with real seed IDs \u00e2\u20ac\u201d all 10/10 entries now VALIDATED."
+    ],
+    "provisional_choices": [],
+    "manual_fixes": [
+      "All 10 call-library.json entries (whoami, list_bases, get_base_schema, create_table, create_field, update_field, list_records, create_records, update_records, upload_attachment) were filled in manually from Airtable's stable public REST API contract \u00e2\u20ac\u201d the docs site is a JS-rendered SPA and pr-api-extractor's non-headless scraper returned MISSING/404 for every endpoint.",
+      "Testing used an explicit token override to pr-api-tester instead of the ambient PLEASE_REST_TOKEN env var, which held a stale/mismatched value (47 chars) apparently left over from another active PleaseREST build sharing the same generic env var name \u00e2\u20ac\u201d see dogfood F2 (TOOL).",
+      "Resources.Designer.cs: removed the duplicate placeholder property block (old Allman-style lines 56-235) left behind after add_to_resources appended a second K&R-style copy of all 20 icon properties \u2014 60 CS0102 errors, see dogfood F5."
+    ],
+    "icon_design": [
+      "plugin_prefix 'ATC' CONFIRMED at Phase 11 \u2014 no rename needed; icons.json, Resources.resx, Resources.Designer.cs and AirTableConnectInfo.cs all agree on the ATC_ prefix.",
+      "Icon system: colour=domain (red access/discovery, blue schema, yellow data), shape=operation kind (hexagon/rounded-square/cut-square/bubble), bg watermark=resource, fg glyph=action. Presets are blue (both feed the Field / Field JSON family) rather than a fourth colour.",
+      "Canvas subcategories merged 11 -> 7 at the user's request (Auth, Base, Table, Field, Record, Attachment, Presets). Rationale: the icon shape already encodes builder-vs-live-call (cut-square vs rounded-square), so splitting each 'X' / 'X JSON' pair into its own ribbon panel was redundant. Colour families and every rendered icon are unchanged.",
+      "Palette cut to red + blue only at the user's request. Red = mutates Airtable (6 components), blue = reads, local builders and presets (13). Colour is a risk signal, not a domain one; shape (hexagon/rounded-square/cut-square/bubble) carries operation kind.",
+      "background.icon watermark layer removed from every icon and must not be reintroduced full-bleed: it defaults to filling the canvas, which desaturates the whole tile and leaves the untouched rounded corners looking like a border. Use an explicit small align.fit if a motif is ever wanted."
+    ]
+  },
+  "flags": {
+    "token_ready": true,
+    "openapi_spec_used": false,
+    "auth_gate_passed": false,
+    "first_component_approved": false
+  }
+}

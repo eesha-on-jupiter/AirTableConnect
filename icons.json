@@ -1,0 +1,355 @@
+{
+  "plugin_name": "AirTableConnect",
+  "plugin_prefix": "ATC",
+  "resources_path": "Icons",
+  "resx_path": "Properties/Resources.resx",
+  "defaults": {
+    "size": 24,
+    "fg_color": "#FFFFFF",
+    "background": {
+      "shape": {
+        "type": "rounded-square",
+        "gradient": {
+          "from": "#2D7FF9",
+          "to": "#1B4FA8",
+          "angle": 135
+        }
+      }
+    }
+  },
+  "plugin_icon": {
+    "size": 16,
+    "fg_iconify_id": "mdi:table",
+    "fg_color": "#FFFFFF",
+    "background": {
+      "shape": {
+        "type": "rounded-square",
+        "gradient": {
+          "from": "#F82B60",
+          "to": "#B0113F",
+          "angle": 135
+        }
+      }
+    }
+  },
+  "subcategories": {
+    "Auth": {
+      "fg_color": "#FFFFFF",
+      "background": {
+        "shape": {
+          "type": "hexagon",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    "Base": {
+      "fg_color": "#FFFFFF",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    "Table": {
+      "fg_color": "#FFFFFF",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    "Field": {
+      "fg_color": "#FFFFFF",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    "Record": {
+      "fg_color": "#FFFFFF",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    "Attachment": {
+      "fg_color": "#FFFFFF",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    "Presets": {
+      "fg_color": "#FFFFFF",
+      "background": {
+        "shape": {
+          "type": "bubble",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "AirTableConnectAuth",
+      "subcategory": "Auth",
+      "fg_iconify_id": "mdi:key-variant"
+    },
+    {
+      "name": "GetBases",
+      "subcategory": "Base",
+      "fg_iconify_id": "mdi:magnify"
+    },
+    {
+      "name": "GetBaseSchema",
+      "subcategory": "Base",
+      "fg_iconify_id": "mdi:sitemap-outline"
+    },
+    {
+      "name": "CreateTable",
+      "subcategory": "Table",
+      "fg_iconify_id": "mdi:table-plus",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#F82B60",
+            "to": "#B0113F",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "TableJson",
+      "subcategory": "Table",
+      "fg_iconify_id": "mdi:table-edit",
+      "background": {
+        "shape": {
+          "type": "cut-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "CreateField",
+      "subcategory": "Field",
+      "fg_iconify_id": "mdi:table-column-plus-after",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#F82B60",
+            "to": "#B0113F",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "UpdateField",
+      "subcategory": "Field",
+      "fg_iconify_id": "mdi:pencil",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#F82B60",
+            "to": "#B0113F",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "FieldJson",
+      "subcategory": "Field",
+      "fg_iconify_id": "mdi:form-textbox",
+      "background": {
+        "shape": {
+          "type": "cut-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "SelectFieldOptions",
+      "subcategory": "Field",
+      "fg_iconify_id": "mdi:format-list-checks",
+      "background": {
+        "shape": {
+          "type": "cut-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "ListRecords",
+      "subcategory": "Record",
+      "fg_iconify_id": "mdi:format-list-bulleted"
+    },
+    {
+      "name": "CreateRecords",
+      "subcategory": "Record",
+      "fg_iconify_id": "mdi:table-row-plus-after",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#F82B60",
+            "to": "#B0113F",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "UpdateRecords",
+      "subcategory": "Record",
+      "fg_iconify_id": "mdi:sync",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#F82B60",
+            "to": "#B0113F",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "BuildRecordsFromGrid",
+      "subcategory": "Record",
+      "fg_iconify_id": "mdi:grid",
+      "background": {
+        "shape": {
+          "type": "cut-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "GetRecordField",
+      "subcategory": "Record",
+      "fg_iconify_id": "mdi:table-column",
+      "background": {
+        "shape": {
+          "type": "cut-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "UploadAttachment",
+      "subcategory": "Attachment",
+      "fg_iconify_id": "mdi:cloud-upload",
+      "background": {
+        "shape": {
+          "type": "rounded-square",
+          "gradient": {
+            "from": "#F82B60",
+            "to": "#B0113F",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "AttachmentFromUrl",
+      "subcategory": "Attachment",
+      "fg_iconify_id": "mdi:link-variant",
+      "background": {
+        "shape": {
+          "type": "cut-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "AttachmentFromFileOrBitmap",
+      "subcategory": "Attachment",
+      "fg_iconify_id": "mdi:file-image",
+      "background": {
+        "shape": {
+          "type": "cut-square",
+          "gradient": {
+            "from": "#2D7FF9",
+            "to": "#1B4FA8",
+            "angle": 135
+          }
+        }
+      }
+    },
+    {
+      "name": "AirtableColorPreset",
+      "subcategory": "Presets",
+      "fg_iconify_id": "mdi:palette"
+    },
+    {
+      "name": "FieldTypePreset",
+      "subcategory": "Presets",
+      "fg_iconify_id": "mdi:format-list-bulleted-type"
+    }
+  ]
+}

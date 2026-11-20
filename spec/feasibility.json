@@ -1,0 +1,93 @@
+{
+  "platform": "Airtable",
+  "base_url": "https://api.airtable.com",
+  "auth_method": "Bearer token",
+  "auth_notes": "Personal access token (recommended) or OAuth access token. Header: Authorization: Bearer {token}. API keys deprecated since 2024-02-01. Token must be granted the specific base as a resource plus the scopes below.",
+  "api_version": "v0",
+  "extra_headers": {},
+  "scopes": [
+    "data.records:read",
+    "data.records:write",
+    "data.recordComments:read",
+    "data.recordComments:write",
+    "schema.bases:read",
+    "schema.bases:write",
+    "webhook:manage"
+  ],
+  "rate_limits": {
+    "per_base": "5 requests/sec/base",
+    "per_token": "50 requests/sec across all traffic for a given user/service account",
+    "on_exceed": "429, must wait 30s before retrying"
+  },
+  "resources": [
+    {
+      "name": "Base",
+      "endpoints": [
+        { "id": "whoami", "method": "GET", "path": "/v0/meta/whoami" },
+        { "id": "list_bases", "method": "GET", "path": "/v0/meta/bases" },
+        { "id": "get_base_schema", "method": "GET", "path": "/v0/meta/bases/{baseId}/tables" }
+      ],
+      "notes": "whoami is the lightweight token-validation call (no base required) — used for the Auth component."
+    },
+    {
+      "name": "Table",
+      "endpoints": [
+        { "id": "create_table", "method": "POST", "path": "/v0/meta/bases/{baseId}/tables" }
+      ],
+      "notes": "Body: { name, description?, fields: [{ name, type, description?, options? }] } — first field becomes the primary field. Airtable has no public endpoint to create views (grid/gallery/kanban); 'layout' scope for v1 means table/column structure only."
+    },
+    {
+      "name": "Field",
+      "endpoints": [
+        { "id": "create_field", "method": "POST", "path": "/v0/meta/bases/{baseId}/tables/{tableId}/fields" },
+        { "id": "update_field", "method": "PATCH", "path": "/v0/meta/bases/{baseId}/tables/{tableId}/fields/{fieldId}" }
+      ],
+      "notes": "Single/multi-select field options carry a fixed set of 40 color names per choice (see select_colors below) — this is the only per-item 'color' surface Airtable's API exposes; there is no per-record cell-color write."
+    },
+    {
+      "name": "Record",
+      "endpoints": [
+        { "id": "list_records", "method": "GET", "path": "/v0/{baseId}/{tableIdOrName}" },
+        { "id": "get_record", "method": "GET", "path": "/v0/{baseId}/{tableIdOrName}/{recordId}" },
+        { "id": "create_records", "method": "POST", "path": "/v0/{baseId}/{tableIdOrName}" },
+        { "id": "update_records", "method": "PATCH", "path": "/v0/{baseId}/{tableIdOrName}" },
+        { "id": "replace_records", "method": "PUT", "path": "/v0/{baseId}/{tableIdOrName}" },
+        { "id": "delete_records", "method": "DELETE", "path": "/v0/{baseId}/{tableIdOrName}" }
+      ],
+      "notes": "Batch write endpoints (create/update/replace/delete) accept up to 10 records per call. update_records supports upsert via performUpsert.fieldsToMergeOn when id is omitted. list_records paginates via offset, pageSize max 100. Attachment field values can be set directly here as [{\"url\": \"...\"}] and Airtable fetches + hosts the file — this covers the URL-based picture input without needing the Attachment resource below."
+    },
+    {
+      "name": "Attachment",
+      "endpoints": [
+        { "id": "upload_attachment", "method": "POST", "path": "/v0/{baseId}/{recordId}/{attachmentFieldIdOrName}/uploadAttachment" }
+      ],
+      "notes": "IMPORTANT: this endpoint lives on a different host — https://content.airtable.com — not https://api.airtable.com. Body: { contentType, file (base64), filename }. Max 5MB. Covers picture-from-file-path and picture-from-bitmap (encode local bytes/in-memory bitmap to base64 client-side); picture-from-URL instead goes through create_records/update_records on the Record resource above."
+    },
+    {
+      "name": "RecordComment",
+      "endpoints": [
+        { "id": "list_comments", "method": "GET", "path": "/v0/{baseId}/{tableIdOrName}/{recordId}/comments" },
+        { "id": "create_comment", "method": "POST", "path": "/v0/{baseId}/{tableIdOrName}/{recordId}/comments" }
+      ],
+      "notes": "Secondary resource — include only if a stated workflow needs record comments."
+    },
+    {
+      "name": "Webhook",
+      "endpoints": [
+        { "id": "list_webhooks", "method": "GET", "path": "/v0/bases/{baseId}/webhooks" },
+        { "id": "create_webhook", "method": "POST", "path": "/v0/bases/{baseId}/webhooks" },
+        { "id": "delete_webhook", "method": "DELETE", "path": "/v0/bases/{baseId}/webhooks/{webhookId}" }
+      ],
+      "notes": "Requires an externally reachable notification URL and payload polling — likely out of scope for v1 given Grasshopper has no persistent server; propose skip unless a workflow specifically needs it."
+    }
+  ],
+  "select_colors": [
+    "blueLight2", "cyanLight2", "tealLight2", "greenLight2", "yellowLight2", "orangeLight2", "redLight2", "pinkLight2", "purpleLight2", "grayLight2",
+    "blueLight1", "cyanLight1", "tealLight1", "greenLight1", "yellowLight1", "orangeLight1", "redLight1", "pinkLight1", "purpleLight1", "grayLight1",
+    "blueBright", "cyanBright", "tealBright", "greenBright", "yellowBright", "orangeBright", "redBright", "pinkBright", "purpleBright", "grayBright",
+    "blueDark1", "cyanDark1", "tealDark1", "greenDark1", "yellowDark1", "orangeDark1", "redDark1", "pinkDark1", "purpleDark1", "grayDark1"
+  ],
+  "api_hierarchy": "Base -> Table (incl. create_table layout) -> Field (incl. select colors) / Record -> Attachment / RecordComment; Webhook attaches to Base",
+  "openapi_spec_available": false,
+  "openapi_spec_notes": "Airtable does not publish a static, download-once OpenAPI/Swagger spec covering all bases generically; its API reference is generated per-base. Use extract_from_docs per endpoint in Phase 6."
+}

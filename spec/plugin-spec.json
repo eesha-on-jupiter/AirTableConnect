@@ -1,0 +1,1273 @@
+{
+  "plugin_name": "AirTableConnect",
+  "platform": "Airtable",
+  "base_url": "https://api.airtable.com",
+  "auth_method": "Bearer token",
+  "api_version": "v0",
+  "tab_name": "AirTableConnect",
+  "subcategories": [
+    {
+      "name": "Auth",
+      "type": "http",
+      "components": [
+        {
+          "class_name": "AirTableConnectAuthComponent",
+          "file_name": "AirTableConnectAuth.cs",
+          "type": "component",
+          "role": "write",
+          "endpoint_id": "whoami",
+          "name": "Connect to Airtable",
+          "nickname": "Connect",
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Base",
+      "type": "http",
+      "components": [
+        {
+          "class_name": "GetBasesComponent",
+          "file_name": "GetBases.cs",
+          "type": "component",
+          "role": "write",
+          "endpoint_id": "list_bases",
+          "name": "List Bases",
+          "nickname": "Bases",
+          "workflows": [
+            "Discover Base & Table Schema"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Base Names",
+              "nickname": "BN",
+              "type": "string",
+              "access": "list"
+            },
+            {
+              "name": "Base IDs",
+              "nickname": "BI",
+              "type": "string",
+              "access": "list"
+            },
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "GetBaseSchemaComponent",
+          "file_name": "GetBaseSchema.cs",
+          "type": "component",
+          "role": "write",
+          "endpoint_id": "get_base_schema",
+          "name": "Get Base Schema",
+          "nickname": "Schema",
+          "workflows": [
+            "Discover Base & Table Schema"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Base ID",
+              "nickname": "BI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Table Names",
+              "nickname": "TN",
+              "type": "string",
+              "access": "list"
+            },
+            {
+              "name": "Table IDs",
+              "nickname": "TI",
+              "type": "string",
+              "access": "list"
+            },
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Table",
+      "type": "mixed",
+      "components": [
+        {
+          "class_name": "CreateTableComponent",
+          "file_name": "CreateTable.cs",
+          "type": "button",
+          "role": "write",
+          "endpoint_id": "create_table",
+          "name": "Create Table Layout",
+          "nickname": "CreateTable",
+          "workflows": [
+            "Create Table Layouts"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Base ID",
+              "nickname": "BI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Table JSON",
+              "nickname": "TJ",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Table ID",
+              "nickname": "TI",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "TableJsonComponent",
+          "file_name": "TableJson.cs",
+          "type": "component",
+          "role": "aggregator",
+          "name": "Build Table JSON",
+          "nickname": "TableJSON",
+          "workflows": [
+            "Create Table Layouts"
+          ],
+          "inputs": [
+            {
+              "name": "Table Name",
+              "nickname": "TN",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Description",
+              "nickname": "D",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Field JSON",
+              "nickname": "FJ",
+              "type": "string",
+              "access": "list",
+              "default": null
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Table JSON",
+              "nickname": "TJ",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Field",
+      "type": "mixed",
+      "components": [
+        {
+          "class_name": "CreateFieldComponent",
+          "file_name": "CreateField.cs",
+          "type": "button",
+          "role": "write",
+          "endpoint_id": "create_field",
+          "name": "Create Field",
+          "nickname": "CreateField",
+          "workflows": [
+            "Build Color-Coded Select Fields",
+            "Create Table Layouts"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Base ID",
+              "nickname": "BI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Table ID",
+              "nickname": "TI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Field JSON",
+              "nickname": "FJ",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Field ID",
+              "nickname": "FID",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "UpdateFieldComponent",
+          "file_name": "UpdateField.cs",
+          "type": "button",
+          "role": "write",
+          "endpoint_id": "update_field",
+          "name": "Update Field",
+          "nickname": "UpdateField",
+          "workflows": [
+            "Build Color-Coded Select Fields"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Base ID",
+              "nickname": "BI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Table ID",
+              "nickname": "TI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Field ID",
+              "nickname": "FID",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Field JSON",
+              "nickname": "FJ",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "FieldJsonComponent",
+          "file_name": "FieldJson.cs",
+          "type": "component",
+          "role": "unit",
+          "name": "Build Field JSON",
+          "nickname": "FieldJSON",
+          "workflows": [
+            "Build Color-Coded Select Fields",
+            "Create Table Layouts"
+          ],
+          "inputs": [
+            {
+              "name": "Field Name",
+              "nickname": "FN",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Field Type",
+              "nickname": "FT",
+              "type": "string",
+              "access": "item",
+              "default": "singleLineText"
+            },
+            {
+              "name": "Description",
+              "nickname": "D",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Options JSON",
+              "nickname": "OJ",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Field JSON",
+              "nickname": "FJ",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "SelectFieldOptionsComponent",
+          "file_name": "SelectFieldOptions.cs",
+          "type": "component",
+          "role": "aggregator",
+          "name": "Build Select Choices",
+          "nickname": "Choices",
+          "workflows": [
+            "Build Color-Coded Select Fields"
+          ],
+          "inputs": [
+            {
+              "name": "Choice Labels",
+              "nickname": "CL",
+              "type": "string",
+              "access": "list",
+              "default": null
+            },
+            {
+              "name": "Colors",
+              "nickname": "C",
+              "type": "string",
+              "access": "list",
+              "default": null
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Options JSON",
+              "nickname": "OJ",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Record",
+      "type": "mixed",
+      "components": [
+        {
+          "class_name": "ListRecordsComponent",
+          "file_name": "ListRecords.cs",
+          "type": "component",
+          "role": "write",
+          "endpoint_id": "list_records",
+          "name": "List Records",
+          "nickname": "Records",
+          "workflows": [
+            "Drive Generation from Airtable Data",
+            "Compute-and-Write-Back Analysis Results"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Base ID",
+              "nickname": "BI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Table",
+              "nickname": "TB",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Filter Formula",
+              "nickname": "FF",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "View",
+              "nickname": "V",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Max Records",
+              "nickname": "MR",
+              "type": "int",
+              "access": "item",
+              "default": 0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Record IDs",
+              "nickname": "RID",
+              "type": "string",
+              "access": "list"
+            },
+            {
+              "name": "Record JSON",
+              "nickname": "RJ",
+              "type": "string",
+              "access": "list"
+            },
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "CreateRecordsComponent",
+          "file_name": "CreateRecords.cs",
+          "type": "button",
+          "role": "write",
+          "endpoint_id": "create_records",
+          "name": "Create Records",
+          "nickname": "CreateRecords",
+          "workflows": [
+            "Push Parametric Data to Airtable"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Base ID",
+              "nickname": "BI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Table",
+              "nickname": "TB",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Record JSON",
+              "nickname": "RJ",
+              "type": "string",
+              "access": "list",
+              "default": null
+            },
+            {
+              "name": "Typecast",
+              "nickname": "TC",
+              "type": "bool",
+              "access": "item",
+              "default": false
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Record IDs",
+              "nickname": "RID",
+              "type": "string",
+              "access": "list"
+            },
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "UpdateRecordsComponent",
+          "file_name": "UpdateRecords.cs",
+          "type": "button",
+          "role": "write",
+          "endpoint_id": "update_records",
+          "name": "Update or Sync Records",
+          "nickname": "UpdateRecords",
+          "workflows": [
+            "Compute-and-Write-Back Analysis Results",
+            "Sync Generative Model to Airtable by Key (Upsert)"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Base ID",
+              "nickname": "BI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Table",
+              "nickname": "TB",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Record JSON",
+              "nickname": "RJ",
+              "type": "string",
+              "access": "list",
+              "default": null
+            },
+            {
+              "name": "Upsert",
+              "nickname": "U",
+              "type": "bool",
+              "access": "item",
+              "default": false
+            },
+            {
+              "name": "Fields To Merge On",
+              "nickname": "FM",
+              "type": "string",
+              "access": "list",
+              "default": null
+            },
+            {
+              "name": "Typecast",
+              "nickname": "TC",
+              "type": "bool",
+              "access": "item",
+              "default": false
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Record IDs",
+              "nickname": "RID",
+              "type": "string",
+              "access": "list"
+            },
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "BuildRecordsFromGridComponent",
+          "file_name": "BuildRecordsFromGrid.cs",
+          "type": "component",
+          "role": "aggregator",
+          "name": "Build Records From Table",
+          "nickname": "RecordGrid",
+          "workflows": [
+            "Push Parametric Data to Airtable",
+            "Compute-and-Write-Back Analysis Results",
+            "Sync Generative Model to Airtable by Key (Upsert)",
+            "Attach Pictures to Records"
+          ],
+          "notes": "Handles one record (a single branch in Values) just as well as many \u2014 covers the single-field write-back case and the bulk tabular case with the same component, no separate unit/aggregator pair needed.",
+          "inputs": [
+            {
+              "name": "Field Names",
+              "nickname": "FN",
+              "type": "string",
+              "access": "list",
+              "default": null
+            },
+            {
+              "name": "Values",
+              "nickname": "V",
+              "type": "string",
+              "access": "tree",
+              "default": null
+            },
+            {
+              "name": "Record IDs",
+              "nickname": "RID",
+              "type": "string",
+              "access": "list",
+              "default": null
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Record JSON",
+              "nickname": "RJ",
+              "type": "string",
+              "access": "list"
+            }
+          ]
+        },
+        {
+          "class_name": "GetRecordFieldComponent",
+          "file_name": "GetRecordField.cs",
+          "type": "component",
+          "role": "unit",
+          "name": "Get Field From Records",
+          "nickname": "GetField",
+          "workflows": [
+            "Drive Generation from Airtable Data",
+            "Compute-and-Write-Back Analysis Results"
+          ],
+          "inputs": [
+            {
+              "name": "Record JSON",
+              "nickname": "RJ",
+              "type": "string",
+              "access": "list",
+              "default": null
+            },
+            {
+              "name": "Field Name",
+              "nickname": "FN",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Field Value",
+              "nickname": "FV",
+              "type": "string",
+              "access": "list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Attachment",
+      "type": "mixed",
+      "components": [
+        {
+          "class_name": "UploadAttachmentComponent",
+          "file_name": "UploadAttachment.cs",
+          "type": "button",
+          "role": "write",
+          "endpoint_id": "upload_attachment",
+          "name": "Upload Picture",
+          "nickname": "Upload",
+          "workflows": [
+            "Attach Pictures to Records"
+          ],
+          "inputs": [
+            {
+              "name": "Token",
+              "nickname": "T",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Base ID",
+              "nickname": "BI",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Record ID",
+              "nickname": "RID",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Field",
+              "nickname": "F",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Attachment Upload JSON",
+              "nickname": "AU",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Status",
+              "nickname": "S",
+              "type": "string",
+              "access": "item"
+            },
+            {
+              "name": "Response",
+              "nickname": "R",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "AttachmentFromUrlComponent",
+          "file_name": "AttachmentFromUrl.cs",
+          "type": "component",
+          "role": "unit",
+          "name": "Attachment From URL",
+          "nickname": "FromURL",
+          "workflows": [
+            "Attach Pictures to Records"
+          ],
+          "inputs": [
+            {
+              "name": "URL",
+              "nickname": "U",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Filename",
+              "nickname": "FN",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Attachments JSON",
+              "nickname": "AS",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "AttachmentFromFileOrBitmapComponent",
+          "file_name": "AttachmentFromFileOrBitmap.cs",
+          "type": "component",
+          "role": "unit",
+          "name": "Attachment From File Or Bitmap",
+          "nickname": "FromFileOrBitmap",
+          "workflows": [
+            "Attach Pictures to Records"
+          ],
+          "notes": "Merged component \u2014 supply either File Path or Bitmap (Bitmap wins if both given); both sources produce the identical Attachment Upload JSON contract, so one component covers both instead of two.",
+          "inputs": [
+            {
+              "name": "File Path",
+              "nickname": "FP",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Bitmap",
+              "nickname": "B",
+              "type": "bitmap",
+              "access": "item",
+              "default": null
+            },
+            {
+              "name": "Filename",
+              "nickname": "FN",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            },
+            {
+              "name": "Content Type",
+              "nickname": "CT",
+              "type": "string",
+              "access": "item",
+              "default": ""
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Attachment Upload JSON",
+              "nickname": "AU",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Presets",
+      "type": "preset",
+      "components": [
+        {
+          "class_name": "AirtableColorPresetComponent",
+          "file_name": "AirtableColorPreset.cs",
+          "type": "preset",
+          "role": "preset",
+          "name": "Airtable Color",
+          "nickname": "Color",
+          "workflows": [
+            "Build Color-Coded Select Fields"
+          ],
+          "values": [
+            "blueLight2",
+            "cyanLight2",
+            "tealLight2",
+            "greenLight2",
+            "yellowLight2",
+            "orangeLight2",
+            "redLight2",
+            "pinkLight2",
+            "purpleLight2",
+            "grayLight2",
+            "blueLight1",
+            "cyanLight1",
+            "tealLight1",
+            "greenLight1",
+            "yellowLight1",
+            "orangeLight1",
+            "redLight1",
+            "pinkLight1",
+            "purpleLight1",
+            "grayLight1",
+            "blueBright",
+            "cyanBright",
+            "tealBright",
+            "greenBright",
+            "yellowBright",
+            "orangeBright",
+            "redBright",
+            "pinkBright",
+            "purpleBright",
+            "grayBright",
+            "blueDark1",
+            "cyanDark1",
+            "tealDark1",
+            "greenDark1",
+            "yellowDark1",
+            "orangeDark1",
+            "redDark1",
+            "pinkDark1",
+            "purpleDark1",
+            "grayDark1"
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "nickname": "C",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        },
+        {
+          "class_name": "FieldTypePresetComponent",
+          "file_name": "FieldTypePreset.cs",
+          "type": "preset",
+          "role": "preset",
+          "name": "Field Type",
+          "nickname": "Type",
+          "workflows": [
+            "Build Color-Coded Select Fields",
+            "Create Table Layouts"
+          ],
+          "values": [
+            "singleLineText",
+            "multilineText",
+            "number",
+            "checkbox",
+            "singleSelect",
+            "multipleSelects",
+            "date",
+            "attachment",
+            "url",
+            "email",
+            "phoneNumber",
+            "currency",
+            "percent",
+            "rating"
+          ],
+          "notes": "Curated subset of Airtable's writable field types. Formula/rollup/lookup/linkedRecord excluded for v1 \u2014 their options schemas are complex and no stated workflow needs them.",
+          "outputs": [
+            {
+              "name": "Field Type",
+              "nickname": "FT",
+              "type": "string",
+              "access": "item"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Utilities",
+      "type": "util",
+      "components": [
+        {
+          "class_name": "AirTableConnectClient",
+          "file_name": "AirTableConnectClient.cs",
+          "type": "class"
+        },
+        {
+          "class_name": "PluginUtilities",
+          "file_name": "PluginUtilities.cs",
+          "type": "class"
+        },
+        {
+          "class_name": "ButtonComponent",
+          "file_name": "ButtonComponent.cs",
+          "type": "class"
+        }
+      ]
+    }
+  ],
+  "builders": [
+    {
+      "file_name": "TableBuilders.cs",
+      "covers": [
+        "Table"
+      ],
+      "used_by": [
+        "TableJsonComponent",
+        "CreateTableComponent"
+      ]
+    },
+    {
+      "file_name": "FieldBuilders.cs",
+      "covers": [
+        "Field"
+      ],
+      "used_by": [
+        "FieldJsonComponent",
+        "SelectFieldOptionsComponent",
+        "CreateFieldComponent",
+        "UpdateFieldComponent"
+      ]
+    },
+    {
+      "file_name": "RecordBuilders.cs",
+      "covers": [
+        "Record"
+      ],
+      "used_by": [
+        "BuildRecordsFromGridComponent",
+        "GetRecordFieldComponent",
+        "CreateRecordsComponent",
+        "UpdateRecordsComponent"
+      ]
+    },
+    {
+      "file_name": "AttachmentBuilders.cs",
+      "covers": [
+        "Attachment"
+      ],
+      "used_by": [
+        "AttachmentFromUrlComponent",
+        "AttachmentFromFileOrBitmapComponent",
+        "UploadAttachmentComponent"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": "FieldJsonComponent.Field JSON",
+      "to": "TableJsonComponent.Field JSON",
+      "nickname": "FJ",
+      "access": "item\u2192list"
+    },
+    {
+      "from": "TableJsonComponent.Table JSON",
+      "to": "CreateTableComponent.Table JSON",
+      "nickname": "TJ",
+      "access": "item\u2192item"
+    },
+    {
+      "from": "FieldJsonComponent.Field JSON",
+      "to": "CreateFieldComponent.Field JSON",
+      "nickname": "FJ",
+      "access": "item\u2192item"
+    },
+    {
+      "from": "FieldJsonComponent.Field JSON",
+      "to": "UpdateFieldComponent.Field JSON",
+      "nickname": "FJ",
+      "access": "item\u2192item"
+    },
+    {
+      "from": "SelectFieldOptionsComponent.Options JSON",
+      "to": "FieldJsonComponent.Options JSON",
+      "nickname": "OJ",
+      "access": "item\u2192item"
+    },
+    {
+      "from": "BuildRecordsFromGridComponent.Record JSON",
+      "to": "CreateRecordsComponent.Record JSON",
+      "nickname": "RJ",
+      "access": "list\u2192list"
+    },
+    {
+      "from": "BuildRecordsFromGridComponent.Record JSON",
+      "to": "UpdateRecordsComponent.Record JSON",
+      "nickname": "RJ",
+      "access": "list\u2192list"
+    },
+    {
+      "from": "ListRecordsComponent.Record JSON",
+      "to": "GetRecordFieldComponent.Record JSON",
+      "nickname": "RJ",
+      "access": "list\u2192list"
+    },
+    {
+      "from": "AttachmentFromFileOrBitmapComponent.Attachment Upload JSON",
+      "to": "UploadAttachmentComponent.Attachment Upload JSON",
+      "nickname": "AU",
+      "access": "item\u2192item"
+    }
+  ],
+  "payload_contracts": [
+    {
+      "resource": "Field",
+      "contract": {
+        "name": "Field JSON",
+        "nickname": "FJ",
+        "access": "item"
+      },
+      "produced_by": "FieldJsonComponent",
+      "consumed_by": [
+        "CreateFieldComponent",
+        "UpdateFieldComponent"
+      ]
+    },
+    {
+      "resource": "Record",
+      "contract": {
+        "name": "Record JSON",
+        "nickname": "RJ",
+        "access": "list"
+      },
+      "produced_by": [
+        "BuildRecordsFromGridComponent"
+      ],
+      "consumed_by": [
+        "CreateRecordsComponent",
+        "UpdateRecordsComponent"
+      ],
+      "notes": "One component handles both a single record (one branch) and many at once (a full tabular tree) \u2014 no separate unit/aggregator pair, per the simplification pass at Gate 2."
+    },
+    {
+      "resource": "Attachment",
+      "contract": {
+        "name": "Attachments JSON",
+        "nickname": "AS",
+        "access": "item"
+      },
+      "produced_by": "AttachmentFromUrlComponent",
+      "consumed_by": [
+        "BuildRecordsFromGridComponent"
+      ],
+      "notes": "URL-sourced attachments embed directly into a record's fields: place the Attachments JSON output at the matching position in BuildRecordsFromGridComponent's Values tree, alongside the field's plain-scalar siblings, before the record exists. AttachmentFromUrlComponent emits the whole single-element attachment array as its output JSON \u2014 no separate combining step, since no workflow attaches more than one picture per field."
+    },
+    {
+      "resource": "Attachment",
+      "contract": {
+        "name": "Attachment Upload JSON",
+        "nickname": "AU",
+        "access": "item"
+      },
+      "produced_by": [
+        "AttachmentFromFileOrBitmapComponent"
+      ],
+      "consumed_by": [
+        "UploadAttachmentComponent"
+      ],
+      "notes": "Deliberately a SEPARATE contract from Attachments JSON, not interchangeable: uploadAttachment is a base64 binary upload against an EXISTING record on a different host (content.airtable.com), while Attachments JSON is plain metadata embedded in create/update before the record exists."
+    }
+  ],
+  "aec_features": [
+    {
+      "name": "Auth Manager",
+      "implementation": "AirTableConnectAuthComponent (Auth tab) \u2014 already the planned whoami token-check component, no additional work."
+    },
+    {
+      "name": "Batch Processor",
+      "implementation": "Internal to RecordBuilders.cs / AirTableConnectClient.cs, no new canvas components: (1) CreateRecordsComponent and UpdateRecordsComponent auto-chunk their incoming Record JSON list into groups of 10 (Airtable's per-call cap) and issue multiple sequential requests, concatenating Record IDs/Status/Response across chunks; (2) ListRecordsComponent auto-loops the `offset` pagination token internally until either the API returns no offset or Max Records is reached, rather than truncating at one page of up to 100."
+    }
+  ],
+  "skip_for_v1": [
+    {
+      "endpoint_id": "get_record",
+      "reason": "No workflow needs a single-record fetch by ID; list_records with filterByFormula/view already covers targeted reads."
+    },
+    {
+      "endpoint_id": "replace_records",
+      "reason": "PUT performs a destructive full replace (clears unspecified fields); no workflow needs this, update_records (PATCH) covers every stated write-back/upsert case. Destructive \u2014 opt-in only, like DELETE."
+    },
+    {
+      "endpoint_id": "delete_records",
+      "reason": "No workflow needs deletion. Destructive endpoint \u2014 requires explicit opt-in per convention."
+    },
+    {
+      "resource": "RecordComment",
+      "reason": "No stated workflow uses record comments."
+    },
+    {
+      "resource": "Webhook",
+      "reason": "Requires an externally reachable notification URL; Grasshopper has no persistent server to receive webhook callbacks."
+    }
+  ],
+  "subcategory_grouping_note": "Each JSON-builder component shares a subcategory with the live call it feeds (merged from 11 canvas subcategories to 7 at Phase 11). The icon shape is what distinguishes them: cut-square = local JSON builder (no HTTP), rounded-square = live API call."
+}

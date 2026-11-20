@@ -1,0 +1,553 @@
+[
+  {
+    "endpoint_id": "whoami",
+    "component": "AirTableConnectAuthComponent",
+    "method": "GET",
+    "url_template": "/v0/meta/whoami",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [],
+    "query_params": [],
+    "headers": {
+      "Authorization": "Bearer {token}"
+    },
+    "body_schema": null,
+    "response_schema": {
+      "id": "string (usrXXXXXXXXXXXXXX)",
+      "scopes": "string[] (only present for OAuth tokens)"
+    },
+    "example_request": {},
+    "example_response": {
+      "id": "usrL2PNC5ynLTPtSs"
+    },
+    "notes": "Manually sourced from Airtable's official REST API reference (docs page requires JS to render; scraper could not extract). Simplest possible auth check, used as the Auth Manager whoami probe.",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "list_bases",
+    "component": "GetBasesComponent",
+    "method": "GET",
+    "url_template": "/v0/meta/bases",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [],
+    "query_params": [
+      {
+        "name": "offset",
+        "type": "string",
+        "required": false,
+        "notes": "pagination cursor from a previous response"
+      }
+    ],
+    "headers": {
+      "Authorization": "Bearer {token}"
+    },
+    "body_schema": null,
+    "response_schema": {
+      "bases": [
+        {
+          "id": "string (appXXXX)",
+          "name": "string",
+          "permissionLevel": "string"
+        }
+      ],
+      "offset": "string (optional)"
+    },
+    "example_request": {},
+    "example_response": {
+      "bases": [
+        {
+          "id": "appLkNDICXNqxSDhG",
+          "name": "Apartment Hunting",
+          "permissionLevel": "create"
+        }
+      ]
+    },
+    "notes": "Manually sourced (docs page is JS-rendered, scraper marked MISSING). Only lists bases the token/PAT can access. GetBasesComponent does not loop offset \u2014 no stated workflow needs >100 accessible bases.",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "get_base_schema",
+    "component": "GetBaseSchemaComponent",
+    "method": "GET",
+    "url_template": "/v0/meta/bases/{baseId}/tables",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [
+      {
+        "name": "baseId",
+        "type": "string"
+      }
+    ],
+    "query_params": [],
+    "headers": {
+      "Authorization": "Bearer {token}"
+    },
+    "body_schema": null,
+    "response_schema": {
+      "tables": [
+        {
+          "id": "string (tblXXXX)",
+          "name": "string",
+          "primaryFieldId": "string",
+          "fields": "object[]",
+          "views": "object[]"
+        }
+      ]
+    },
+    "example_request": {},
+    "example_response": {
+      "tables": [
+        {
+          "id": "tblhTZGTP7Yorx0Kb",
+          "name": "Apartments",
+          "primaryFieldId": "fld1VnFWvCU9ZXPCK",
+          "fields": [],
+          "views": []
+        }
+      ]
+    },
+    "notes": "Manually sourced (docs page JS-rendered). GetBaseSchemaComponent surfaces Table Names/Table IDs only; full field/view detail is available in Response but not separately parsed.",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "create_table",
+    "component": "CreateTableComponent",
+    "method": "POST",
+    "url_template": "/v0/meta/bases/{baseId}/tables",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [
+      {
+        "name": "baseId",
+        "type": "string"
+      }
+    ],
+    "query_params": [],
+    "headers": {
+      "Authorization": "Bearer {token}",
+      "Content-Type": "application/json"
+    },
+    "body_schema": {
+      "name": "string",
+      "description": "string (optional)",
+      "fields": "array, required, at least 1 \u2014 [{ name, type, description?, options? }], first field becomes the primary field"
+    },
+    "response_schema": {
+      "id": "string (tblXXXX)",
+      "name": "string",
+      "primaryFieldId": "string",
+      "fields": "object[]",
+      "views": "object[]"
+    },
+    "example_request": {
+      "name": "Apartments",
+      "fields": [
+        {
+          "name": "Name",
+          "type": "singleLineText"
+        }
+      ]
+    },
+    "example_response": {
+      "id": "tblhTZGTP7Yorx0Kb",
+      "name": "Apartments",
+      "primaryFieldId": "fld1VnFWvCU9ZXPCK"
+    },
+    "notes": "Manually sourced (docs page JS-rendered). Table JSON body assembled by TableJsonComponent/TableBuilders.cs from a list of Field JSON items \u2014 first field in the list is the primary field, per Airtable's ordering rule.",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "create_field",
+    "component": "CreateFieldComponent",
+    "method": "POST",
+    "url_template": "/v0/meta/bases/{baseId}/tables/{tableId}/fields",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [
+      {
+        "name": "baseId",
+        "type": "string"
+      },
+      {
+        "name": "tableId",
+        "type": "string"
+      }
+    ],
+    "query_params": [],
+    "headers": {
+      "Authorization": "Bearer {token}",
+      "Content-Type": "application/json"
+    },
+    "body_schema": {
+      "name": "string",
+      "type": "string, one of Airtable's field type enum",
+      "description": "string (optional)",
+      "options": "object, shape depends on type \u2014 e.g. singleSelect/multipleSelects need { choices: [{name,color?}] }; number needs { precision }; percent/currency similar"
+    },
+    "response_schema": {
+      "id": "string (fldXXXX)",
+      "name": "string",
+      "type": "string",
+      "options": "object (echoes/normalizes input options)"
+    },
+    "example_request": {
+      "name": "Status",
+      "type": "singleSelect",
+      "options": {
+        "choices": [
+          {
+            "name": "Todo"
+          },
+          {
+            "name": "Done"
+          }
+        ]
+      }
+    },
+    "example_response": {
+      "id": "fldsxpc2hwPjTGRt7",
+      "name": "Status",
+      "type": "singleSelect",
+      "options": {
+        "choices": [
+          {
+            "id": "selJDW9aG2XuNrRRC",
+            "name": "Todo",
+            "color": "greenBright"
+          }
+        ]
+      }
+    },
+    "notes": "Manually sourced (docs page JS-rendered). options shape varies per field type \u2014 FieldBuilders.cs only assembles options for the curated FieldTypePreset subset in plugin-spec.json (skips formula/rollup/lookup/linkedRecord per skip_for_v1 rationale), so this is a controlled variant surface, not true ambiguity.",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "update_field",
+    "component": "UpdateFieldComponent",
+    "method": "PATCH",
+    "url_template": "/v0/meta/bases/{baseId}/tables/{tableId}/fields/{fieldId}",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [
+      {
+        "name": "baseId",
+        "type": "string"
+      },
+      {
+        "name": "tableId",
+        "type": "string"
+      },
+      {
+        "name": "fieldId",
+        "type": "string"
+      }
+    ],
+    "query_params": [],
+    "headers": {
+      "Authorization": "Bearer {token}",
+      "Content-Type": "application/json"
+    },
+    "body_schema": {
+      "name": "string (optional)",
+      "description": "string (optional)",
+      "options": "object (optional), same per-type shape as create_field"
+    },
+    "response_schema": {
+      "id": "string (fldXXXX)",
+      "name": "string",
+      "type": "string",
+      "options": "object"
+    },
+    "example_request": {
+      "options": {
+        "choices": [
+          {
+            "name": "Todo"
+          },
+          {
+            "name": "In Progress"
+          },
+          {
+            "name": "Done"
+          }
+        ]
+      }
+    },
+    "example_response": {
+      "id": "fldsxpc2hwPjTGRt7",
+      "name": "Status",
+      "type": "singleSelect",
+      "options": {
+        "choices": []
+      }
+    },
+    "notes": "Manually sourced (docs page JS-rendered). type is immutable on update \u2014 only name/description/options are patchable. Used by the Build Color-Coded Select Fields workflow to append new choices without clobbering existing ones (caller must include prior choices in the merged Options JSON).",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "list_records",
+    "component": "ListRecordsComponent",
+    "method": "GET",
+    "url_template": "/v0/{baseId}/{tableIdOrName}",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [
+      {
+        "name": "baseId",
+        "type": "string"
+      },
+      {
+        "name": "tableIdOrName",
+        "type": "string"
+      }
+    ],
+    "query_params": [
+      {
+        "name": "filterByFormula",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "view",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "maxRecords",
+        "type": "int",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "type": "int",
+        "required": false,
+        "notes": "max 100, default 100"
+      },
+      {
+        "name": "offset",
+        "type": "string",
+        "required": false,
+        "notes": "pagination cursor; absent from response once exhausted"
+      }
+    ],
+    "headers": {
+      "Authorization": "Bearer {token}"
+    },
+    "body_schema": null,
+    "response_schema": {
+      "records": [
+        {
+          "id": "string (recXXXX)",
+          "createdTime": "string (ISO 8601)",
+          "fields": "object"
+        }
+      ],
+      "offset": "string (present only if more pages remain)"
+    },
+    "example_request": {},
+    "example_response": {
+      "records": [
+        {
+          "id": "recFdmveWO6ka1cSp",
+          "createdTime": "2024-01-01T00:00:00.000Z",
+          "fields": {
+            "Name": "Example"
+          }
+        }
+      ]
+    },
+    "notes": "Manually sourced (docs page JS-rendered). ListRecordsComponent auto-loops offset internally (Batch Processor AEC feature) until offset is absent or Max Records reached, rather than surfacing one page.",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "create_records",
+    "component": "CreateRecordsComponent",
+    "method": "POST",
+    "url_template": "/v0/{baseId}/{tableIdOrName}",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [
+      {
+        "name": "baseId",
+        "type": "string"
+      },
+      {
+        "name": "tableIdOrName",
+        "type": "string"
+      }
+    ],
+    "query_params": [],
+    "headers": {
+      "Authorization": "Bearer {token}",
+      "Content-Type": "application/json"
+    },
+    "body_schema": {
+      "records": "array, required, max 10 per call \u2014 [{ fields: object }]",
+      "typecast": "bool (optional), auto-converts loosely-typed values"
+    },
+    "response_schema": {
+      "records": [
+        {
+          "id": "string (recXXXX)",
+          "createdTime": "string (ISO 8601)",
+          "fields": "object"
+        }
+      ]
+    },
+    "example_request": {
+      "records": [
+        {
+          "fields": {
+            "Name": "Example"
+          }
+        }
+      ],
+      "typecast": false
+    },
+    "example_response": {
+      "records": [
+        {
+          "id": "recFdmveWO6ka1cSp",
+          "createdTime": "2024-01-01T00:00:00.000Z",
+          "fields": {
+            "Name": "Example"
+          }
+        }
+      ]
+    },
+    "notes": "Manually sourced (docs page JS-rendered). Airtable caps at 10 records/call; CreateRecordsComponent auto-chunks larger Record JSON lists into sequential requests of 10 (Batch Processor AEC feature), concatenating Record IDs/Status/Response across chunks.",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "update_records",
+    "component": "UpdateRecordsComponent",
+    "method": "PATCH",
+    "url_template": "/v0/{baseId}/{tableIdOrName}",
+    "base_url": "https://api.airtable.com",
+    "auth_in": "header",
+    "path_params": [
+      {
+        "name": "baseId",
+        "type": "string"
+      },
+      {
+        "name": "tableIdOrName",
+        "type": "string"
+      }
+    ],
+    "query_params": [],
+    "headers": {
+      "Authorization": "Bearer {token}",
+      "Content-Type": "application/json"
+    },
+    "body_schema": {
+      "records": "array, required, max 10 per call \u2014 [{ id: string, fields: object }] (id omitted per-record when performUpsert is used and no match)",
+      "typecast": "bool (optional)",
+      "performUpsert": "object (optional) \u2014 { fieldsToMergeOn: string[] } enables upsert-by-key"
+    },
+    "response_schema": {
+      "records": [
+        {
+          "id": "string (recXXXX)",
+          "createdTime": "string",
+          "fields": "object"
+        }
+      ],
+      "createdRecords": "string[] (record IDs newly created, upsert only)",
+      "updatedRecords": "string[] (record IDs matched and updated, upsert only)"
+    },
+    "example_request": {
+      "performUpsert": {
+        "fieldsToMergeOn": [
+          "SKU"
+        ]
+      },
+      "records": [
+        {
+          "fields": {
+            "SKU": "A1",
+            "Qty": 5
+          }
+        }
+      ]
+    },
+    "example_response": {
+      "records": [
+        {
+          "id": "recFdmveWO6ka1cSp",
+          "createdTime": "2024-01-01T00:00:00.000Z",
+          "fields": {
+            "SKU": "A1",
+            "Qty": 5
+          }
+        }
+      ],
+      "createdRecords": [
+        "recFdmveWO6ka1cSp"
+      ],
+      "updatedRecords": []
+    },
+    "notes": "Manually sourced (docs page JS-rendered). PATCH (not PUT/replace_records, which is skipped for v1 as destructive). Same 10-record chunking as create_records (Batch Processor). Upsert path used by 'Sync Generative Model to Airtable by Key' workflow via the Upsert + Fields To Merge On inputs.",
+    "status": "EXTRACTED"
+  },
+  {
+    "endpoint_id": "upload_attachment",
+    "component": "UploadAttachmentComponent",
+    "method": "POST",
+    "url_template": "/v0/{baseId}/{recordId}/{attachmentFieldIdOrName}/uploadAttachment",
+    "base_url": "https://content.airtable.com",
+    "auth_in": "header",
+    "path_params": [
+      {
+        "name": "baseId",
+        "type": "string"
+      },
+      {
+        "name": "recordId",
+        "type": "string"
+      },
+      {
+        "name": "attachmentFieldIdOrName",
+        "type": "string"
+      }
+    ],
+    "query_params": [],
+    "headers": {
+      "Authorization": "Bearer {token}",
+      "Content-Type": "application/json"
+    },
+    "body_schema": {
+      "contentType": "string, required (MIME type)",
+      "file": "string, required (base64-encoded bytes)",
+      "filename": "string, required"
+    },
+    "response_schema": {
+      "id": "string (recXXXX)",
+      "createdTime": "string",
+      "fields": "object \u2014 attachment field now containing the new attachment object(s)"
+    },
+    "example_request": {
+      "contentType": "image/png",
+      "file": "<base64>",
+      "filename": "render.png"
+    },
+    "example_response": {
+      "id": "recFdmveWO6ka1cSp",
+      "createdTime": "2024-01-01T00:00:00.000Z",
+      "fields": {
+        "Photo": [
+          {
+            "id": "attXXXX",
+            "url": "https://...",
+            "filename": "render.png",
+            "size": 12345,
+            "type": "image/png"
+          }
+        ]
+      }
+    },
+    "notes": "Manually sourced (docs page JS-rendered). Deliberately different host (content.airtable.com, not api.airtable.com) per plugin-spec note \u2014 requires an EXISTING record, unlike Attachments JSON embedded at record-creation time via a URL-sourced attachment.",
+    "status": "EXTRACTED"
+  }
+]

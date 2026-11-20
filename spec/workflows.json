@@ -1,0 +1,60 @@
+{
+  "workflows": [
+    {
+      "name": "Push Parametric Data to Airtable",
+      "user_goal": "Take a tree/list of tabular data computed in Grasshopper (a panel schedule, a room list, a cost breakdown) and create it as rows in an Airtable table in one shot, instead of hand-typing or copy/pasting into a spreadsheet.",
+      "data_shape": "tree of records (one branch per row) -> list of Record JSON -> batch create_records (10/call)",
+      "varies_per_item": true,
+      "benchmark": "tabular-to-platform"
+    },
+    {
+      "name": "Drive Generation from Airtable Data",
+      "user_goal": "Pull records from a table (a room program, a component library, a task list) into Grasshopper as a tree, and vary geometry/logic per item using each record's fields — tedious row-by-row in Airtable's own grid, trivial as a tree operation in GH.",
+      "data_shape": "list_records -> list of records -> tree of field values, one branch per record",
+      "varies_per_item": true,
+      "benchmark": null
+    },
+    {
+      "name": "Compute-and-Write-Back Analysis Results",
+      "user_goal": "For each record, run a computation Airtable's formula fields can't express (structural check, daylight score, geometry-derived metric), then write the result back into the matching record by Record ID — a round-trip analysis loop.",
+      "data_shape": "list_records -> tree of records -> per-branch computed value paired with Record ID -> batch update_records",
+      "varies_per_item": true,
+      "benchmark": null
+    },
+    {
+      "name": "Sync Generative Model to Airtable by Key (Upsert)",
+      "user_goal": "Keep a table in lock-step with a live parametric model — re-running the definition updates existing rows and inserts new ones, matched by an external key field, without manually tracking record IDs or creating duplicates.",
+      "data_shape": "tree of records with a key field -> batch update_records with performUpsert.fieldsToMergeOn",
+      "varies_per_item": true,
+      "benchmark": null
+    },
+    {
+      "name": "Discover Base & Table Schema",
+      "user_goal": "Browse which bases/tables/fields the token can see, directly on the canvas, so the right table/field names can be wired without alt-tabbing to the Airtable web UI to copy IDs.",
+      "data_shape": "item lookups -> lists of base/table/field names and ids",
+      "varies_per_item": false,
+      "benchmark": null
+    },
+    {
+      "name": "Attach Pictures to Records",
+      "user_goal": "Attach an image to a record from a file path, a URL, or a live Grasshopper/Rhino bitmap — same payload contract regardless of source.",
+      "data_shape": "unit (file path | url | bitmap) -> Attachment JSON -> create_records/update_records (url case) or uploadAttachment (file/bitmap case, base64)",
+      "varies_per_item": true,
+      "benchmark": null
+    },
+    {
+      "name": "Build Color-Coded Select Fields",
+      "user_goal": "Generatively define a Single/Multi-Select field's choices, each assigned one of Airtable's 40 fixed color names — e.g. auto-categorize a computed classification into colored tags.",
+      "data_shape": "tree of choice labels -> parallel tree/preset of color names -> Field JSON -> create_field/update_field",
+      "varies_per_item": true,
+      "benchmark": null
+    },
+    {
+      "name": "Create Table Layouts",
+      "user_goal": "Generatively scaffold a whole new table — name plus full column/field list — from a Grasshopper-defined schema, in one call.",
+      "data_shape": "list of field definitions -> Table JSON -> create_table",
+      "varies_per_item": true,
+      "benchmark": null
+    }
+  ]
+}
